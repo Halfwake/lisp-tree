@@ -47,11 +47,52 @@
 
 ;; (reduce #'insert-tree '(4 1 2 3 5 6 7) :initial-value (null-tree))
 
-(defun elem-tree (tree val)
-  "Check if val is a member of the tree."
+(defun print-tree (tree)
+  (labels ((print-iter (tree depth)
+	     (dotimes (i depth)
+	       (format t "| "))
+	     (cond ((node-tree-p tree)
+		    (format t "~a~%" (val-tree tree))
+		    (print-iter (right-branch tree) (1+ depth))
+		    (print-iter (left-branch tree) (1+ depth)))
+		   ((null-tree-p tree)
+		    (format t "null~%")))))
+    (print-iter tree 0)))
+		       
+
+(defun elem (tree val) "Check if val is a member of the tree."
   (cond ((null-tree-p tree)
 	 nil)
 	((node-tree-p tree)
 	 (or (equal val (val-tree tree))
 	     (elem-tree (left-branch tree) val)
 	     (elem-tree (right-branch tree) val)))))
+
+(defun size-tree (tree)
+  (cond ((null-tree-p tree)
+	 0)
+	((node-tree-p tree)
+	 (+ 1
+	    (sum-tree (left-branch tree))
+	    (sum-tree (right-branch tree))))))
+
+(defun sum-tree (tree)
+  (cond ((null-tree-p tree)
+	 0)
+	((node-tree-p tree)
+	 (+ (val-tree tree)
+	    (sum-tree (left-branch tree))
+	    (sum-tree (right-branch tree))))))
+
+(defun size-tree-iter (tree)
+  (let ((accum 0))
+    (labels ((iter (tree)
+	       (cond ((null-tree-p tree)
+		      0)
+		     ((node-tree-p tree)
+		      (incf accum)
+		      (iter (left-branch tree))
+		      (iter (right-branch tree))))
+	       accum))
+      (iter tree))))
+
