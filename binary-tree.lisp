@@ -96,3 +96,24 @@
 	       accum))
       (iter tree))))
 
+(defun tree-leaf-p (tree)
+  (and (node-tree-p tree)
+       (null-tree-p (left-branch tree))
+       (null-tree-p (right-branch tree))))
+
+(defun amount-of-leaves (tree)
+  (cond ((null-tree-p tree)
+	 0)
+	((tree-leaf-p tree)
+	 1)
+	((node-tree-p tree)
+	 (+ (amount-of-leaves (left-branch tree))
+	    (amount-of-leaves (right-branch tree))))))
+
+(defun max-tree-level (tree)
+  (cond ((null-tree-p tree)
+	 0)
+	((node-tree-p tree)
+	 (max (1+ (max-tree-level (left-branch tree)))
+	      (1+ (max-tree-level (right-branch tree)))))))
+
